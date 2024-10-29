@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+</head>
+<body>
+    <p>Use this site to access your Todo list</p>
+
+    <h2>Add Task</h2>
+    <form action="" id="addTaskForm">
+        <input type="text" name="name" id="" placeholder="Your name"><br>
+        <input type="text" name="task" placeholder="Task description"><br>
+        <input type="text" name="status" id="" placeholder="status of task"><br>
+        <button type="submit">Add</button>
+
+    </form>
+    <br>
+    <h2>Update Task</h2>
+    <form action="" id="updateTaskForm">
+        <input type="text" name="name" id="" placeholder="Your name"><br>
+        <input type="text" name="task" placeholder="Task description"><br>
+        <input type="text" name="status" id="" placeholder="status of task"><br>
+        <button type="submit">Update</button>
+
+    </form>
+    <br>
+    <h2>View all</h2>
+        <button id="viewAllTasks">View</button>
+        <div id="taskList"></div>
+
+    <script>
+        document.getElementById('addTaskForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+
+            const formData = new FormData(e.target);
+            const queryString = new URLSearchParams(formData).toString();
+
+            const response = await fetch(`/add?${queryString}`);
+            const result = await response.json();
+            alert(JSON.stringify(result));
+        });
+
+        document.getElementById('updateTaskForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+
+            const formData = new FormData(e.target);
+            const queryString = new URLSearchParams(formData).toString();
+
+            const response = await fetch(`/update?${queryString}`);
+            const result = await response.json();
+            alert(JSON.stringify(result));
+        });
+
+        document.getElementById('viewAllTasks').addEventListener('click', async () => {
+            const response = await fetch('/readall');
+            const tasks = await response.json();
+            const taskListDiv = document.getElementById('taskList');
+            taskListDiv.innerHTML = '<h3>Tasks:</h3>';
+            tasks.forEach(task => {
+                taskListDiv.innerHTML += `<p>${task.name}: ${task.task} - ${task.status}</p>`;
+            });
+        });
+    </script>
+    
+</body>
+</html>
